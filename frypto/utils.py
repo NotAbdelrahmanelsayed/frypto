@@ -1,6 +1,10 @@
+import time
 import pandas as pd
 import numpy as np
-from feature_engineering import Features
+from functools import wraps
+from sklearn.metrics import mean_squared_error
+
+# from .feature_engineering import Features
 
 def read_data(data_folder, path):
     """
@@ -98,7 +102,7 @@ def fill_timestamps(df, asset_id):
     asset_df = asset_df.bfill(axis=1)
     return asset_df
 
-def apply_feature_engineering(df: pd.DataFrame) -> pd.DataFrame:
+# def apply_feature_engineering(df: pd.DataFrame) -> pd.DataFrame:
     """
 
     Parameters
@@ -166,7 +170,7 @@ def evaluate_predictions(df):
     -------
 
     """
-    from sklearn.metrics import mean_squared_error
+    
     df = df.dropna(subset=['Target', 'Prediction'])
 
     if df.empty:
@@ -245,3 +249,15 @@ def get_time_series_splits(data, n_splits=5):
         splits.append((train_idx, test_idx))
 
     return splits
+
+
+def timeit(func):
+    @wraps(func)
+    def time_wrapper(*args, **kwargs):
+        start_time = time.perf_counter()
+        result = func(*args, **kwargs)
+        end_time = time.perf_counter()
+        total_time = end_time - start_time
+        print(f'function {func.__name__} {args} {kwargs} took {total_time:.4f} seconds to run')
+        return result
+    return time_wrapper

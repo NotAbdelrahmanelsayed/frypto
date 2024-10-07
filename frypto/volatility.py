@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-
+from helpers import _pad_nan
 class VolatilityFeatures:
     """
     A class for computing rolling volatility features based on financial time series data,
@@ -8,19 +8,19 @@ class VolatilityFeatures:
 
     Parameters
     ----------
-    close_np: np.ndarray    
+    close: np.ndarray    
         A 1D numpy array of closing prices.
 
-    high_np : np.ndarray
+    high : np.ndarray
         A 1D numpy array of high prices.
 
-    low_np : np.ndarray
+    low : np.ndarray
         A 1D numpy array of low prices.
     
     Raises
     ------
     ValueError
-        If the input arrays (`close_np`, `high_np`, `low_np`) do not have the same length.
+        If the input arrays (`close`, `high`, `low`) do not have the same length.
     
     Methods
     -------
@@ -28,16 +28,14 @@ class VolatilityFeatures:
         Computes rolling volatility features over the specified window size and returns a DataFrame.
 
     """
-    def __init__(self, close_np: np.ndarray, high_np: np.ndarray, low_np: np.ndarray) -> None:
-        if not(len(close_np) == len(high_np) == len(low_np) > 0):
+    def __init__(self, close: np.ndarray, high: np.ndarray, low: np.ndarray) -> None:
+        if not(len(close) == len(high) == len(low) > 0):
             raise ValueError("Input arrays must be of the same length and non-empty.")
-        self.close_np = close_np
-        self.high_np = high_np
-        self.low_np = low_np
+        self.close = close
+        self.high = high
+        self.low = low
 
-    def _pad_nan(self, values: np.ndarray, window: int) -> np.ndarray:
-        """Pad the array with NaN values at the beginning to match the original array length."""
-        return np.concatenate([np.full(window - 1, np.nan), values])
+    
 
     def compute(self, window: int = 15) -> pd.DataFrame:
         """
@@ -54,17 +52,17 @@ class VolatilityFeatures:
         -------
         pd.DataFrame
             A DataFrame with computed volatility features:
-            - rolling_std: Rolling standard deviation of the `close_np` over the window.
+            - rolling_std: Rolling standard deviation of the `close` over the window.
             - upper_band: Upper Bollinger band (mean + 2*std).
             - lower_band: Lower Bollinger band (mean - 2*std).
             - ATR: Average True Range, calculated using the high, low, and close prices.
 
         Examples
         --------
-        >>> close_np = np.arange(1, 20)
-        >>> high_np = np.arange(1, 20)
-        >>> low_np = np.arange(1, 20)
-        >>> features = VolatilityFeatures(close_np, high_np, low_np)
+        >>> close = np.arange(1, 20)
+        >>> high = np.arange(1, 20)
+        >>> low = np.arange(1, 20)
+        >>> features = VolatilityFeatures(close, high, low)
         >>> features.compute(window=2)
            rolling_std  upper_band  lower_band  ATR
         0          NaN         NaN         NaN  NaN
@@ -74,26 +72,26 @@ class VolatilityFeatures:
         4          0.5         5.5         3.5  0.0
         ...
         """
-        if len(self.close_np) < window:
+        if len(self.close) < window:
             raise ValueError("Window size must be smaller than the length of the input arrays.")
         
         df = pd.DataFrame()
 
         # Rolling statistics for close price
-        window_view = np.lib.stride_tricks.sliding_window_view(self.close_np, window)
+        window_view = np.lib.stride_tricks.sliding_window_view(self.close, window)
         rolling_std = np.std(window_view, axis=1)
         rolling_mean = np.mean(window_view, axis=1)
 
-        df['rolling_std'] = self._pad_nan(rolling_std, window)
-        df['upper_band'] = self._pad_nan(rolling_mean + 2 * rolling_std, window)
-        df['lower_band'] = self._pad_nan(rolling_mean - 2 * rolling_std, window)
+        df['rolling_std'] = _pad_nan(rolling_std, window)
+        df['upper_band'] = _pad_nan(rolling_mean + 2 * rolling_std, window)
+        df['lower_band'] = _pad_nan(rolling_mean - 2 * rolling_std, window)
 
         # ATR (Average True Range)
-        true_range = np.maximum(self.high_np - self.low_np, 
-                                np.maximum(np.abs(self.high_np[1:] - self.close_np[:-1]),
-                                           np.abs(self.low_np[1:] - self.close_np[:-1])))
+        true_range = np.maximum(self.high[1:] - self.low[1:], 
+                        np.maximum(np.abs(self.high[1:] - self.close[:-1]),
+                                   np.abs(self.low[1:] - self.close[:-1])))
         true_range = np.insert(true_range, 0, 0)  # Insert a 0 for the first true range
         atr = pd.Series(true_range).rolling(window).mean().values
-        df['ATR'] = self._pad_nan(atr[window-1:], window)
+        df['ATR'] = _pad_nan(atr[window-1:], window)
 
         return df

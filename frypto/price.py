@@ -75,11 +75,11 @@ class PriceFeatures:
 
         Examples
         --------
-        >>> close_np = np.random.rand(20)
-        >>> high_np = np.random.rand(20)
-        >>> low_np = np.random.rand(20)
-        >>> open_np = np.random.rand(20)
-        >>> pf = PriceFeatures(close_np, high_np, low_np, open_np)
+        >>> close = np.random.rand(20)
+        >>> high = np.random.rand(20)
+        >>> low = np.random.rand(20)
+        >>> open = np.random.rand(20)
+        >>> pf = PriceFeatures(close, high, low, open)
         >>> pf.compute()
            Price_change  next_log_return  high_low_spread  close_open_spread
         0      0.000000              NaN        0.403473           0.241718

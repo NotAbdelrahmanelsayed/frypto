@@ -65,9 +65,9 @@ class VolumeFeatures:
 
         Examples
         --------
-        >>> close_np = np.array([100, 102, 101, 103, 105])
-        >>> volume_np = np.array([1000, 1500, 1200, 1300, 1600])
-        >>> vf = VolumeFeatures(close_np, volume_np)
+        >>> close = np.array([100, 102, 101, 103, 105])
+        >>> volume = np.array([1000, 1500, 1200, 1300, 1600])
+        >>> vf = VolumeFeatures(close, volume)
         >>> vf.compute()
            volume_change     OBV
         0         0.0        0.0
