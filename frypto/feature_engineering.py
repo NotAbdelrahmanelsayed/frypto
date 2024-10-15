@@ -30,111 +30,111 @@ class Features:
         
     #     return self._convert_to_float32()
 
-    def volume_based_features(self) -> pd.DataFrame:
-        """Compute volume-based features and return the updated DataFrame."""
-        price_change = np.diff(self.close_np, prepend=self.close_np[0])
-        direction = np.sign(price_change)
+    # def volume_based_features(self) -> pd.DataFrame:
+    #     """Compute volume-based features and return the updated DataFrame."""
+    #     price_change = np.diff(self.close_np, prepend=self.close_np[0])
+    #     direction = np.sign(price_change)
         
-        self.df['volume_change'] = np.diff(self.volume_np, prepend=self.volume_np[0])
-        self.df['OBV'] = np.cumsum(direction * self.volume_np)
+    #     self.df['volume_change'] = np.diff(self.volume_np, prepend=self.volume_np[0])
+    #     self.df['OBV'] = np.cumsum(direction * self.volume_np)
         
-        return self._convert_to_float32()
+    #     return self._convert_to_float32()
 
-    def volatility_features(self, window: int = 15) -> pd.DataFrame:
+    # def volatility_features(self, window: int = 15) -> pd.DataFrame:
     
-        window_view = np.lib.stride_tricks.sliding_window_view(self.close_np, window)
-        rolling_std = np.std(window_view, axis=1)
-        rolling_mean = np.mean(window_view, axis=1)
+    #     window_view = np.lib.stride_tricks.sliding_window_view(self.close_np, window)
+    #     rolling_std = np.std(window_view, axis=1)
+    #     rolling_mean = np.mean(window_view, axis=1)
 
-        self.df['rolling_std'] = np.concatenate([[np.nan] * (window - 1), rolling_std])
-        self.df['upper_band'] = np.concatenate([[np.nan] * (window - 1), rolling_mean + 2 * rolling_std])
-        self.df['lower_band'] = np.concatenate([[np.nan] * (window - 1), rolling_mean - 2 * rolling_std])
+    #     self.df['rolling_std'] = np.concatenate([[np.nan] * (window - 1), rolling_std])
+    #     self.df['upper_band'] = np.concatenate([[np.nan] * (window - 1), rolling_mean + 2 * rolling_std])
+    #     self.df['lower_band'] = np.concatenate([[np.nan] * (window - 1), rolling_mean - 2 * rolling_std])
 
-        # ATR (Average True Range)
-        true_range = self.high_np - self.low_np
-        atr = np.mean(np.lib.stride_tricks.sliding_window_view(true_range, window), axis=1)
-        self.df['ATR'] = np.concatenate([[np.nan] * (window - 1), atr])
+    #     # ATR (Average True Range)
+    #     true_range = self.high_np - self.low_np
+    #     atr = np.mean(np.lib.stride_tricks.sliding_window_view(true_range, window), axis=1)
+    #     self.df['ATR'] = np.concatenate([[np.nan] * (window - 1), atr])
 
-        return self._convert_to_float32()
+    #     return self._convert_to_float32()
 
-    def momentum_features(self, window: int = 15, rsi_window: int = 14, macd_windows: tuple = (12, 26, 9)) -> pd.DataFrame:
+    # def momentum_features(self, window: int = 15, rsi_window: int = 14, macd_windows: tuple = (12, 26, 9)) -> pd.DataFrame:
     
-        # RSI Calculation
-        self.df['RSI'] = self._calculate_rsi(self.close_np, rsi_window)
+    #     # RSI Calculation
+    #     self.df['RSI'] = self._calculate_rsi(self.close_np, rsi_window)
 
-        # MACD and Signal Line
-        macd, signal_line = self._calculate_macd(self.close_np, macd_windows[0], macd_windows[1], macd_windows[2])
-        self.df['MACD'] = macd
-        self.df['Signal_Line'] = signal_line
+    #     # MACD and Signal Line
+    #     macd, signal_line = self._calculate_macd(self.close_np, macd_windows[0], macd_windows[1], macd_windows[2])
+    #     self.df['MACD'] = macd
+    #     self.df['Signal_Line'] = signal_line
 
-        # SMA and EMA
-        sma = np.mean(np.lib.stride_tricks.sliding_window_view(self.close_np, window), axis=1)
-        self.df['SMA'] = np.concatenate([[np.nan] * (window - 1), sma])
-        self.df['EMA'] = self.df['Close'].ewm(span=window, adjust=False).mean()
+    #     # SMA and EMA
+    #     sma = np.mean(np.lib.stride_tricks.sliding_window_view(self.close_np, window), axis=1)
+    #     self.df['SMA'] = np.concatenate([[np.nan] * (window - 1), sma])
+    #     self.df['EMA'] = self.df['Close'].ewm(span=window, adjust=False).mean()
 
-        # Rate of Change (ROC)
-        self.df['ROC'] = self._calculate_roc(self.close_np, window)
+    #     # Rate of Change (ROC)
+    #     self.df['ROC'] = self._calculate_roc(self.close_np, window)
 
-        return self._convert_to_float32()
+    #     return self._convert_to_float32()
 
-    def trend_features(self, window: int = 14) -> pd.DataFrame:
+    # def trend_features(self, window: int = 14) -> pd.DataFrame:
     
-        plus_di, minus_di, adx = self._calculate_dmi(window)
-        self.df['+DI'] = plus_di
-        self.df['-DI'] = minus_di
-        self.df['ADX'] = adx
+    #     plus_di, minus_di, adx = self._calculate_dmi(window)
+    #     self.df['+DI'] = plus_di
+    #     self.df['-DI'] = minus_di
+    #     self.df['ADX'] = adx
 
-        support_line, resistance_line = self._calculate_trend_lines(self.close_np, window)
-        self.df['support_line'] = support_line.reindex(self.df.index)
-        self.df['resistance_line'] = resistance_line.reindex(self.df.index)
+    #     support_line, resistance_line = self._calculate_trend_lines(self.close_np, window)
+    #     self.df['support_line'] = support_line.reindex(self.df.index)
+    #     self.df['resistance_line'] = resistance_line.reindex(self.df.index)
 
-        self._calculate_ichimoku_cloud()
+    #     self._calculate_ichimoku_cloud()
 
-        return self._convert_to_float32()
+    #     return self._convert_to_float32()
 
-    def lag_rolling_features(self, lags: List[int] = None, windows: List[int] = None) -> pd.DataFrame:
-        """"""
-        lags = lags or [1, 2, 3]
-        windows = windows or [5, 10, 20]
+    # def lag_rolling_features(self, lags: List[int] | None = None, windows: List[int]| None = None) -> pd.DataFrame:
+        # """"""
+        # lags = lags or [1, 2, 3]
+        # windows = windows or [5, 10, 20]
 
-        # Lag features
-        for lag in lags:
-            self.df[f'lag_{lag}'] = np.roll(self.close_np, lag)
+        # # Lag features
+        # for lag in lags:
+        #     self.df[f'lag_{lag}'] = np.roll(self.close_np, lag)
 
-        # Rolling statistics
-        for window in windows:
-            rolling_mean = np.mean(np.lib.stride_tricks.sliding_window_view(self.close_np, window), axis=1)
-            rolling_max = np.max(np.lib.stride_tricks.sliding_window_view(self.close_np, window), axis=1)
-            rolling_min = np.min(np.lib.stride_tricks.sliding_window_view(self.close_np, window), axis=1)
+        # # Rolling statistics
+        # for window in windows:
+        #     rolling_mean = np.mean(np.lib.stride_tricks.sliding_window_view(self.close_np, window), axis=1)
+        #     rolling_max = np.max(np.lib.stride_tricks.sliding_window_view(self.close_np, window), axis=1)
+        #     rolling_min = np.min(np.lib.stride_tricks.sliding_window_view(self.close_np, window), axis=1)
 
-            self.df[f'rolling_mean_{window}'] = np.concatenate([[np.nan] * (window - 1), rolling_mean])
-            self.df[f'rolling_max_{window}'] = np.concatenate([[np.nan] * (window - 1), rolling_max])
-            self.df[f'rolling_min_{window}'] = np.concatenate([[np.nan] * (window - 1), rolling_min])
+        #     self.df[f'rolling_mean_{window}'] = np.concatenate([[np.nan] * (window - 1), rolling_mean])
+        #     self.df[f'rolling_max_{window}'] = np.concatenate([[np.nan] * (window - 1), rolling_max])
+        #     self.df[f'rolling_min_{window}'] = np.concatenate([[np.nan] * (window - 1), rolling_min])
 
-        return self._convert_to_float32()
+        # return self._convert_to_float32()
 
-    def statistical_features(self, window: int = 20) -> pd.DataFrame:
-        """Compute statistical features (Skew, Kurtosis, Z-score) and return the updated DataFrame.
+    # def statistical_features(self, window: int = 20) -> pd.DataFrame:
+    #     """Compute statistical features (Skew, Kurtosis, Z-score) and return the updated DataFrame.
 
-        Parameters
-        ----------
-        window: int :
-             (Default value = 20)
+    #     Parameters
+    #     ----------
+    #     window: int :
+    #          (Default value = 20)
 
-        Returns
-        -------
+    #     Returns
+    #     -------
 
-        """
-        rolling_skew = pd.Series(self.close_np).rolling(window=window).skew().values
-        rolling_kurtosis = pd.Series(self.close_np).rolling(window=window).kurt().values
-        self.df[f'Skew_{window}'] = rolling_skew
-        self.df[f'kurtosis_{window}'] = rolling_kurtosis
+    #     """
+    #     rolling_skew = pd.Series(self.close_np).rolling(window=window).skew().values
+    #     rolling_kurtosis = pd.Series(self.close_np).rolling(window=window).kurt().values
+    #     self.df[f'Skew_{window}'] = rolling_skew
+    #     self.df[f'kurtosis_{window}'] = rolling_kurtosis
 
-        rolling_mean = np.mean(np.lib.stride_tricks.sliding_window_view(self.close_np, window), axis=1)
-        rolling_std = np.std(np.lib.stride_tricks.sliding_window_view(self.close_np, window), axis=1)
-        self.df[f'zscore_{window}'] = (self.close_np - np.concatenate([[np.nan] * (window - 1), rolling_mean])) / np.concatenate([[np.nan] * (window - 1), rolling_std])
+    #     rolling_mean = np.mean(np.lib.stride_tricks.sliding_window_view(self.close_np, window), axis=1)
+    #     rolling_std = np.std(np.lib.stride_tricks.sliding_window_view(self.close_np, window), axis=1)
+    #     self.df[f'zscore_{window}'] = (self.close_np - np.concatenate([[np.nan] * (window - 1), rolling_mean])) / np.concatenate([[np.nan] * (window - 1), rolling_std])
 
-        return self._convert_to_float32()
+    #     return self._convert_to_float32()
 
     def time_based_features(self) -> pd.DataFrame:
         """Compute time-based features and return the updated DataFrame."""
@@ -145,23 +145,9 @@ class Features:
 
         return self._convert_to_float32()
 
-    def _calculate_rsi(self, close: np.ndarray, window: int) -> np.ndarray:
-        """Relative Strength Index (RSI) Calculation."""
-        delta = np.diff(close, prepend=close[0])
-        gain = np.where(delta > 0, delta, 0)
-        loss = np.where(delta < 0, -delta, 0)
+   
+ 
 
-        avg_gain = np.convolve(gain, np.ones(window)/window, mode='valid')
-        avg_loss = np.convolve(loss, np.ones(window)/window, mode='valid')
-
-        rs = avg_gain / avg_loss
-        rsi = 100 - (100 / (1 + rs))
-
-        return np.concatenate([[np.nan] * (window - 1), rsi])
-
-    
-
-    
 
     def fill(self, ffill: bool, bfill: bool) -> pd.DataFrame:
         """Fill NaNs with forward and/or backward fill for numeric columns, keeping float16 where possible.

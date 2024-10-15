@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from frypto.helpers import _calculate_roc, _calculate_rsi, _calculate_macd, _ewma
+from helpers import _calculate_roc, _calculate_rsi, _calculate_macd, _ewma
 
 class MomentumFeatures:
     """

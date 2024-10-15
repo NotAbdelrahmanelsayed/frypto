@@ -5,3 +5,10 @@ disallow_untyped_defs = true
 [[tool.mypy.overrides]]
 module = "sklearn.metrics"
 ignore_missing_imports = true
+
+[tool.poetry]
+name = "frypto"
+version = "0.1.0"
+packages = [
+    { include = "frypto" }
+]

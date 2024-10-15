@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from frypto.helpers import _pad_nan
+from helpers import _pad_nan
 class VolatilityFeatures:
     """
     A class for computing rolling volatility features based on financial time series data,
