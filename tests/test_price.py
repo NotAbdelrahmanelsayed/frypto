@@ -1,12 +1,11 @@
 import unittest
 import numpy as np
-import pandas as pd
 from frypto.price import PriceFeatures
 
 class TestPriceFeatures(unittest.TestCase):
-
     def setUp(self) -> None:
         """
+        Setup common arrays for use in the test cases.
         """
         self.close = np.array([10, 12, 13, 11, 14])
         self.high = np.array([11, 13, 14, 12, 15])
@@ -20,6 +19,7 @@ class TestPriceFeatures(unittest.TestCase):
         pf = PriceFeatures(self.close, self.high, self.low, self.open)
         df = pf.compute()
         columns = df.columns
+
         # Verify the DataFrame contains the correct columns
         self.assertIn('Price_change', columns)
         self.assertIn('next_log_return', columns)
@@ -28,10 +28,10 @@ class TestPriceFeatures(unittest.TestCase):
 
         # Verify the content of the DataFrame
         expected_price_change = np.array([0, 2, 1, -2, 3])
-        np.testing.assert_array_equal(df.PriceChange, expected_price_change)
+        np.testing.assert_array_equal(df.Price_change, expected_price_change)
 
-        expected_next_log_return = np.array([np.nan, np.log(12 / 10), np.log(13 / 12), np.log(11 / 13), np.log(14 / 11)])
-        np.testing.assert_array_almost_equal(df.next_log_return, expected_next_log_return, decimal=5)
+        expected_next_log_return = np.array([np.nan,  0.18232156,  0.08004271, -0.16705408,  0.24116206])
+        np.testing.assert_array_almost_equal(df.next_log_return, expected_next_log_return, decimal=6)
 
         expected_high_low_spread = self.high - self.low
         np.testing.assert_array_equal(df.high_low_spread, expected_high_low_spread)

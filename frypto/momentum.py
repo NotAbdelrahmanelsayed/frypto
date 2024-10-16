@@ -32,6 +32,8 @@ class MomentumFeatures:
         ValueError
             If the input array is empty.
         """
+        if len(close) == 0:
+            raise ValueError("Close array can't be empty.")
         self.close = close.astype(np.float32)
         
     def compute(self, window: int = 15, rsi_window: int = 14, macd_windows: tuple = (12, 26, 9)) -> pd.DataFrame:

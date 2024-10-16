@@ -1,84 +1,45 @@
+import unittest
 import numpy as np
-import pandas as pd
+from frypto.statistical_features import StatisticalFeatures
 
-class StatisticalFeatures:
-    """
-    A class for computing rolling statistical features based on financial time series data,
-    including rolling skewness, kurtosis, and z-scores.
-
-    Parameters
-    ----------
-    close : np.ndarray
-        A 1D numpy array of closing prices.
-
-    Methods
-    -------
-    compute(window: int = 20) -> pd.DataFrame
-        Computes rolling skewness, kurtosis, and z-scores for the given window size.
-    """
-
-    def __init__(self, close: np.ndarray) -> None:
+class TestStatisticalFeatures(unittest.TestCase):
+    def setUp(self) -> None:
         """
-        Initialize the StatisticalFeatures class with closing price data.
-
-        Parameters
-        ----------
-        close : np.ndarray
-            A 1D numpy array of closing prices.
-
-        Raises
-        ------
-        ValueError
-            If the input array is empty.
+        Setup common arrays for use in the test case.
         """
-        if len(close) == 0:
-            raise ValueError("Close array can't be empty.")
-        self.close = np.array(close).astype(np.float32)
+        self.close = np.array([90, 91, 102, 103, 21])
 
-    def compute(self, window: int = 20) -> pd.DataFrame:
+    def test_valid_input(self) -> None:
         """
-        Compute rolling statistical features including skewness, kurtosis, and z-score for the given window size.
-
-        Parameters
-        ----------
-        window : int, optional
-            The window size for the rolling calculations (default is 20).
-
-        Returns
-        -------
-        pd.DataFrame
-            A DataFrame containing rolling skewness, kurtosis, and z-scores for the specified window.
-
-        Examples
-        --------
-        >>> close_np = np.random.rand(100)
-        >>> sf = StatisticalFeatures(close_np)
-        >>> result = sf.compute(window=20)
-        >>> print(result.tail())
-
-                 Skew_20    kurtosis_20    zscore_20
-        95      -0.378413    -0.755383   0.456289
-        96      -0.558687    -0.543988   1.236031
-        97      -0.672869    -0.011139   0.340689
-        98      -0.569832     0.015443  -0.542069
-        99      -0.548970    -0.300006  -1.926303
+        Test the StatisticalFeatures class with valid input arrays.
         """
+        SF = StatisticalFeatures(self.close)
+        df = SF.compute(window=4)
+        columns = df.columns
+        expected_columns = ['Skew_4', 'Kurtosis_4', 'ZScore_4']
 
-        df = pd.DataFrame()
+        # Verfy the DataFrame contain the correct columns.
+        for col in columns:
+            self.assertIn(col, columns)
+        
+        # Verify the content of the DataFrame
+        np.testing.assert_array_almost_equal(df.Skew_4, [np.nan, np.nan, np.nan, 0.0, -1.8891759251356406])
+        np.testing.assert_array_almost_equal(df.Kurtosis_4, [np.nan, np.nan, np.nan, -5.7945303210463734, 3.58564420103653])
+        np.testing.assert_array_almost_equal(df.ZScore_4, [np.nan, np.nan, np.nan, 1.0795912446866822, -1.7153232284664415])
+    
+    def test_empty_input(self) -> None:
+        """
+        Test the StatisticalFeatures class with empty input array.
+        """
+        with self.assertRaises(ValueError):
+            StatisticalFeatures(np.array([]))
 
-        rolling_skew = pd.Series(self.close).rolling(window=window).skew().values
-        rolling_kurtosis = pd.Series(self.close).rolling(window=window).kurt().values
-        df[f'Skew_{window}'] = rolling_skew
-        df[f'Kurtosis_{window}'] = rolling_kurtosis
-
-        window_view = np.lib.stride_tricks.sliding_window_view(self.close, window)
-        rolling_mean = np.mean(window_view, axis=1)
-        rolling_std = np.std(window_view, axis=1)
-
-        zscore = (self.close - np.concatenate([[np.nan] * (window - 1), rolling_mean])) / np.where(
-            np.concatenate([[np.nan] * (window - 1), rolling_std]) == 0, np.nan, 
-            np.concatenate([[np.nan] * (window - 1), rolling_std])
-        )
-        df[f'ZScore_{window}'] = zscore
-
-        return df
+    def test_greater_window(self) -> None:
+        """
+        Test the StatisticalFeatures class with a window larger than the input array.
+        """
+        with self.assertRaises(ValueError):
+            StatisticalFeatures(np.arange(10)).compute(window=20)
+        
+if __name__ == "__main__":
+    unittest.main()

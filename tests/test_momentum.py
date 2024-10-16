@@ -1,102 +1,48 @@
-import pandas as pd
+import unittest
 import numpy as np
-from helpers import _calculate_roc, _calculate_rsi, _calculate_macd, _ewma
+from frypto.momentum import MomentumFeatures
 
-class MomentumFeatures:
-    """
-    A class for computing momentum indicators based on financial time series data, 
-    including Relative Strength Index (RSI), Moving Average Convergence Divergence (MACD), 
-    Simple Moving Average (SMA), Exponential Moving Average (EMA), and Rate of Change (ROC).
-
-    Parameters
-    ----------
-    close : np.ndarray
-        A 1D numpy array of closing prices.
+class TestMomentumFeatures(unittest.TestCase):
+    def setUp(self) -> None:
+        """
+        Setup common arrays for use in the test case.
+        """
+        self.close = np.array([100, 101, 102, 103, 104])
     
-    Methods
-    -------
-    compute(window=15, rsi_window=14, macd_windows=(12, 26, 9)) -> pd.DataFrame
-        Computes various momentum indicators over specified window sizes and returns them in a DataFrame.
-    """
-    def __init__(self, close: np.ndarray) -> None:
+    def test_valid_input(self) -> None:
         """
-        Initialize the MomentumFeatures class with closing price data.
-
-        Parameters
-        ----------
-        close : np.ndarray
-            A 1D array of closing prices.
-        
-        Raises
-        ------
-        ValueError
-            If the input array is empty.
+        Test the MomentumFeatures class with valid input arrays
         """
-        self.close = close.astype(np.float32)
+        VF = MomentumFeatures(self.close)
+        df = VF.compute(window=3, rsi_window=2, macd_windows=(3, 6, 2))
+        columns = df.columns
+        expected_columns = ['RSI', 'MACD', 'Signal_Line', 'SMA', 'EMA', 'ROC']
+
+        # Verify the DataFrame contain the correct columns.
+        for col in expected_columns:
+            self.assertIn(col, columns)
         
-    def compute(self, window: int = 15, rsi_window: int = 14, macd_windows: tuple = (12, 26, 9)) -> pd.DataFrame:
+        # Verify the content of the DataFrame
+        np.testing.assert_array_almost_equal(df.RSI, [np.nan, np.nan, np.nan, np.nan, np.nan])
+        np.testing.assert_array_almost_equal(df.MACD, [0.0, 0.0833282470703125, 0.2083892822265625, 0.3590087890625, 0.5192794799804688])
+        np.testing.assert_array_almost_equal(df.Signal_Line, [0.0, 0.062496185302734375, 0.16349910199642181, 0.29546815156936646, 0.44529226422309875])
+        np.testing.assert_array_almost_equal(df.SMA, [np.nan, np.nan, 101.0, 102.0, 103.0])
+        np.testing.assert_array_almost_equal(df.EMA, [100.0, 100.66666412353516, 101.42857360839844, 102.26667022705078, 103.16129302978516])
+        np.testing.assert_array_almost_equal(df.ROC, [-1.9607844352722168, -1.9417475461959839, -1.9230769872665405, 3.0, 2.97029709815979])
+
+    def test_empty_input(self) -> None:
         """
-        Compute momentum indicators, including RSI, MACD, SMA, EMA, and ROC, for the given window sizes.
+        Test the MomentumFeatures class with empty input array.
+        """
+        with self.assertRaises(ValueError):
+            MomentumFeatures(np.array([]))
 
-        Parameters
-        ----------
-        window : int, optional
-            Window size for SMA, EMA, and ROC. Defaults to 15.
-        rsi_window : int, optional
-            Window size for RSI calculation. Defaults to 14.
-        macd_windows : tuple, optional
-            A tuple containing three integers representing MACD short window, long window, 
-            and signal line window respectively. Defaults to (12, 26, 9).
+    def test_greater_window(self) -> None:
+        """
+        Test the MomentumFeatures class with a window larger than the input array.
+        """
+        with self.assertRaises(ValueError):
+            MomentumFeatures(np.arange(10)).compute(window=15)
 
-        Returns
-        -------
-        pd.DataFrame
-            A DataFrame with computed momentum indicators:
-            - RSI: Relative Strength Index
-            - MACD: Moving Average Convergence Divergence
-            - Signal_Line: Signal line of the MACD
-            - SMA: Simple Moving Average
-            - EMA: Exponential Moving Average
-            - ROC: Rate of Change
-            
-        Examples
-        --------
-        >>> from momentum import MomentumFeatures
-        >>> import numpy as np
-        >>> close_np = np.arange(200)
-        >>> vf = MomentumFeatures(close_np)
-        >>> vf.compute()
-            RSI       MACD    Signal_Line         SMA     EMA          ROC
-        0   NaN     0.000000       0.000000       NaN  0.000000  -100.000000
-        1   NaN     0.022436       0.012464       NaN  0.533333   -99.462364
-        2   NaN     0.059598       0.031781       NaN  1.088757   -98.930481
-        3   NaN     0.111144       0.058666       NaN  1.666077   -98.404251
-        4   NaN     0.176605       0.093750       NaN  2.265021   -97.883598
-
-        Raises
-        ------
-        ValueError
-            If the input array is smaller than the required window size for any of the indicators.
-        """        
-        if len(self.close) < min(window, rsi_window, min(macd_windows)):
-            raise ValueError("close array can't be smaller than the windows")
-        df = pd.DataFrame()
-        
-        # RSI Calculation
-        df['RSI'] = _calculate_rsi(self.close, rsi_window)
-
-        # MACD and Signal Line
-        macd, signal_line = _calculate_macd(self.close, macd_windows[0], macd_windows[1], macd_windows[2])
-        df['MACD'] = macd
-        df['Signal_Line'] = signal_line
-
-        # SMA and EMA
-        sma = np.mean(np.lib.stride_tricks.sliding_window_view(self.close, window), axis=1)
-        df['SMA'] = np.concatenate([[np.nan] * (window - 1), sma])
-        df['EMA'] = _ewma(self.close, window)
-
-        # Rate of Change (ROC)
-        df['ROC'] = _calculate_roc(self.close, window)
-
-        return df
-    
+if __name__ == "__main__":
+    unittest.main()

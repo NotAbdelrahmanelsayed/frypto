@@ -2,6 +2,9 @@ import numpy as np
 import pandas as pd
 from frypto.helpers import _calculate_dmi, _calculate_trend_lines, _calculate_ichimoku_cloud
 
+# Ignore devision by 0 error
+np.seterr(divide="ignore", invalid="ignore")
+
 class TrendFeatures:
     """
     A class for computing trend-based features from financial time series data,
