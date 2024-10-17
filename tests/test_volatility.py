@@ -45,3 +45,6 @@ class TestVolatilityFeatures(unittest.TestCase):
         arr = np.arange(14)
         with self.assertRaises(ValueError):
             VolatilityFeatures(arr, arr, arr).compute(window=15)
+
+if __name__ == "__main__":
+    unittest.main()

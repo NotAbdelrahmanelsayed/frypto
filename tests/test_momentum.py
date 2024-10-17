@@ -30,6 +30,7 @@ class TestMomentumFeatures(unittest.TestCase):
         np.testing.assert_array_almost_equal(df.EMA, [100.0, 100.66666412353516, 101.42857360839844, 102.26667022705078, 103.16129302978516])
         np.testing.assert_array_almost_equal(df.ROC, [-1.9607844352722168, -1.9417475461959839, -1.9230769872665405, 3.0, 2.97029709815979])
 
+    
     def test_empty_input(self) -> None:
         """
         Test the MomentumFeatures class with empty input array.

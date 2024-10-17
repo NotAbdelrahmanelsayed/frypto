@@ -1,99 +1,38 @@
-# import numpy as np
-# import pandas as pd
+import unittest
+import numpy as np
+from frypto.volume import VolumeFeatures
 
-# class VolumeFeatures:
-#     """
-#     A class for computing volume features based on time-series data, 
-#     including volume change and On-Balance Volume (OBV).
-    
-#     Parameters
-#     ----------
-#     close : np.ndarray
-#         A 1D numpy array of close prices.
-    
-#     volume : np.ndarray
-#         A 1D numpy array of trading volumes.
-    
-#     Raises
-#     ------
-#     ValueError
-#         If input arrays do not have the same length or if they are empty.
-    
-#     Methods
-#     -------
-#     compute() -> pd.DataFrame
-#         Computes volume-based features and returns them in a DataFrame.
-#     """
-    
-#     def __init__(self, close: np.ndarray, volume: np.ndarray) -> None:
-#         """
-#         Initialize the VolumeFeatures class with price and volume data.
+class TestVolumeFeatures(unittest.TestCase):
+    def setUp(self) -> None:
+        """
+        Setup common arrays for use in the test case.
+        """
+        self.close = np.array([100, 102, 101, 103, 105])
+        self.volume = np.array([1000, 1500, 1200, 1300, 1600])
 
-#         Parameters
-#         ----------
-#         close : np.ndarray
-#             Array of close prices.
-#         volume : np.ndarray
-#             Array of trading volumes.
+    def test_valid_input(self) -> None:
+        """
+        Test the VolumeFeatures class with valid input arrays
+        """
+        VF = VolumeFeatures(self.close, self.volume)
+        df = VF.compute()
+        columns = df.columns
+        expected_columns = ['volume_change', 'OBV']
 
-#         Raises
-#         ------
-#         ValueError
-#             If input arrays are not of the same length or if they are empty.
-#         """
-#         if not (len(close) == len(volume) > 0):
-#             raise ValueError("Input arrays must be of the same length and non-empty.")
+        # Verify the DataFrame contain the correct columns.
+        for col in expected_columns:
+            self.assertIn(col, columns)
         
-#         self.close = close
-#         self.volume = volume
+        # Verify the content of the DataFrame
+        np.testing.assert_array_almost_equal(df.volume_change, [0, 500, -300, 100, 300])
+        np.testing.assert_array_almost_equal(df.OBV, [0, 1500, 300, 1600, 3200])
 
-#     def compute(self) -> pd.DataFrame:
-#         """
-#         Compute volume-based features including volume change and On-Balance Volume (OBV).
+    def test_empty_input(self) -> None:
+        """
+        Test the VolumeFeatures class with empty input array.
+        """
+        with self.assertRaises(ValueError):
+            VolumeFeatures(np.array([]), np.array([]))
 
-#         Features
-#         --------
-#         - volume_change: The day-to-day change in trading volume.
-#         - OBV: On-Balance Volume (a cumulative measure based on price direction and volume).
-
-#         Returns
-#         -------
-#         pd.DataFrame
-#             DataFrame containing the computed volume features:
-#             - volume_change: np.ndarray
-#             - OBV: np.ndarray (starting at 0 for the first entry)
-
-#         Examples
-#         --------
-#         >>> close = np.array([100, 102, 101, 103, 105])
-#         >>> volume = np.array([1000, 1500, 1200, 1300, 1600])
-#         >>> vf = VolumeFeatures(close, volume)
-#         >>> vf.compute()
-#            volume_change     OBV
-#         0         0.0        0.0
-#         1       500.0     1500.0
-#         2      -300.0        0.0
-#         3       100.0     1300.0
-#         4       300.0     2900.0
-
-#         Notes
-#         -----
-#         - The OBV starts at 0 and accumulates based on the direction of price changes.
-#         - If the price increases, OBV adds the day's volume; if it decreases, OBV subtracts the day's volume.
-#         """
-        
-#         df = pd.DataFrame()
-
-#         # Price change (used for OBV direction)
-#         price_change = np.diff(self.close, prepend=self.close[0])
-        
-#         # Calculate direction (+1 for up, -1 for down, 0 for no change)
-#         direction = np.sign(price_change)
-        
-#         # Volume change from the previous day
-#         df['volume_change'] = np.diff(self.volume, prepend=self.volume[0])
-        
-#         # On-Balance Volume (OBV), starting at 0
-#         df['OBV'] = np.cumsum(direction * self.volume)
-        
-#         return df
+if __name__ == "__main__":
+    unittest.main()
