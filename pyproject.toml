@@ -1,3 +1,44 @@
+[project]
+name = "frypto"
+version = "0.1.0"
+authors = [
+    {name = "Abderlahman Elsayed", email = "bedoelsayed785@gmail.com" }
+]
+description = "Crypto data feature engineering package."
+readme = "README.md"
+license = {text = "MIT License"}
+keywords = [
+    "feature engineering", 
+    "cryptocurrency", 
+    "crypto", 
+    "time-series", 
+    "technical indicators", 
+    "data preprocessing", 
+    "financial data", 
+    "machine learning", 
+    "trading", 
+    "blockchain", 
+    "RSI", 
+    "MACD", 
+    "moving average", 
+    "price prediction", 
+    "volatility", 
+    "momentum indicators", 
+    "data analysis", 
+    "yfinance"
+]
+
+dependencies = [
+    "pandas",
+    "numpy",
+    "numba",
+    "yfinance"
+]
+
+[project.urls]
+Repository = "https://github.com/NotAbdelrahmanelsayed/frypto"
+Issues = "https://github.com/NotAbdelrahmanelsayed/frypto/issues"
+
 [tool.mypy]
 ignore_missing_imports = true  
 disallow_untyped_defs = true  
@@ -5,10 +46,3 @@ disallow_untyped_defs = true
 [[tool.mypy.overrides]]
 module = "sklearn.metrics"
 ignore_missing_imports = true
-
-[tool.poetry]
-name = "frypto"
-version = "0.1.0"
-packages = [
-    { include = "frypto" }
-]

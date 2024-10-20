@@ -1,10 +1,12 @@
 import numpy as np
 import pandas as pd
 
+
 class PriceFeatures:
     """
-    A class for computing price features based on financial time series data,
-    including price change, next log return, high-low spread, and close-open spread.
+    A class for computing price features based on financial 
+    time series data, including price change, next log return, 
+    high-low spread, and close-open spread.
 
     Parameters
     ----------

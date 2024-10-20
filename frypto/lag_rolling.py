@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from typing import List
+from typing import List, Optional
 
 class LagRollingFeatures:
     """
@@ -37,7 +37,7 @@ class LagRollingFeatures:
             raise ValueError("Close array can't be empty.")
         self.close = np.array(close).astype(np.float32)
 
-    def compute(self, lags: List[int] | None = None, windows: List[int] | None = None) -> pd.DataFrame:
+    def compute(self, lags: Optional[List[int]] = None, windows: Optional[List[int]] = None) -> pd.DataFrame:
         """
         Compute lagged values and rolling window statistics for the provided lags and window sizes.
 

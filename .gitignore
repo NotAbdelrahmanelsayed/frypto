@@ -163,3 +163,7 @@ cython_debug/
 
 # Ignore examples Notebook
 frypto/examples.ipynb
+
+
+# Ignore My leraning materials.
+*.pdf
