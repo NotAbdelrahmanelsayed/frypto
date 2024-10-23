@@ -6,11 +6,13 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "frypto"
 version = "0.1.0"
+requires-python = ">= 3.7"
+
 authors = [
     {name = "Abderlahman Elsayed", email = "bedoelsayed785@gmail.com" }
 ]
 description = "Crypto data feature engineering package."
-readme = "README.md"
+readme = {file = "README.txt", content-type = "text/markdown"}
 license = {text = "MIT License"}
 keywords = [
     "feature engineering", 
@@ -31,6 +33,26 @@ keywords = [
     "momentum indicators", 
     "data analysis", 
     "yfinance"
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Financial and Insurance Industry",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Environment :: Console",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Scientific/Engineering :: Information Analysis",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "Topic :: Scientific/Engineering :: Visualization",
+    "Topic :: Scientific/Engineering :: Data Processing"
 ]
 
 dependencies = [

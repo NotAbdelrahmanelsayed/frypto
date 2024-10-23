@@ -1,7 +1,10 @@
+- [ ] README.md
 - [ ] script for renaming columns for consistincy (i.e close/CLOSE -> Close).
-- [ ] price change can be in the main script and passed to the other classes(volume_features, - price_features)
-- [ ] https://choosealicense.com/
-- [ ] MANIFEST.in
-- [ ] setup.py
+- [ ] write allfeatures class unit test
+- [ ] Main script take the whole df as input and compute using all available classes.
+- [x] price change can be in the main script and passed to the other classes(volume_features, - price_features)
+- [x] https://choosealicense.com/
+- [x] MANIFEST.in
+- [x] setup.py
 - [x] pyproject.toml
 - [x] include numba
