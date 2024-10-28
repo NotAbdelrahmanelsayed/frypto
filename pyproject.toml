@@ -59,7 +59,8 @@ dependencies = [
     "pandas",
     "numpy",
     "numba",
-    "scipy"
+    "scipy",
+    "yfinance"
 ]
 
 [project.urls]

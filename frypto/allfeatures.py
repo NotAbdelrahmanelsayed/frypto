@@ -19,6 +19,9 @@ class AllFeatures:
         df: pd.DataFrame
             A DataFrame containing time series data with columns such as 'close', 'open', 'high', 'low', 'volume'.
         """
+        if len(df) < 20:
+            raise ValueError("Data Frame can't have less than 20 row.")
+        
         columns = {col.lower(): col for col in df.columns}
 
         self.close = self.extract_feature(df, columns, 'close')
@@ -128,3 +131,14 @@ class AllFeatures:
             print("Warning: Trend features could not be computed due to missing data.")
 
         return df
+
+if __name__ == "__main__":
+    np.random.seed(42)
+    data = pd.DataFrame({
+        'close': np.random.randint(1, 300, 50),
+        'open': np.random.randint(1, 300, 50),
+        'high': np.random.randint(1, 300, 50),
+        'low': np.random.randint(1, 300, 50),
+        'volume': np.random.randint(1, 300, 50)})
+    df = AllFeatures(data).compute()
+    columns = df.columns
