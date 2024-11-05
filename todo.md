@@ -1,10 +1,12 @@
+- [ ] 
+- [ ] Docker conatiner for easy contribution.
 - [ ] README.md
 - [ ] Inheret extract_features from allfeatures to the other classes if reasonable.
 - [ ] requirements file
 - [ ] sharable environment for developers
-- [ ] notebooks dir for quickstart examples.
 - [ ] Continues Integration.
 - [ ] More Performance optimization (profiling tools, multiprocessing)
+- [x] notebooks dir for quickstart examples.
 - [x] Main script take the whole df as input and compute using all available classes.
 - [x] script for renaming columns for consistincy (i.e close/CLOSE -> Close).
 - [x] write allfeatures class unit test

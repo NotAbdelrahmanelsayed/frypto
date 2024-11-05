@@ -1,23 +1,36 @@
-# 🔍 Frypto: Feature Engineering for Financial Time Series (Crypto)
+# Frypto: Feature Engineering for Financial Time Series (Crypto)
 
-Frypto is a Python package designed to compute a set of financial time series features. ***including price-based, volume-based, volatility, momentum, trend, and statistical features.***
-<!--  maybe image for before frypto after frypto. or set of generated features in a table** -->
+Frypto is a Python package designed to compute a set of financial time series features, including price-based, volume-based, volatility, momentum, trend, and statistical features.
+
 ---
-## Why frypto?
+
+## Table of Contents
+- [Why Frypto?](#why-frypto)
+- [Quick Start](#quick-start)
+- [Usage](#usage)
+- [Jupyter Notebooks](#jupyter-notebooks)
+- [Contributing](#contributing)
+- [License](#license)
+
+---
+
+## Why Frypto?
 - In the G-Research competition, the top 3 winners demonstrated the critical role feature engineering plays in predicting real-world crypto market data.
 - **Frypto saves over 100 hours** of manual feature creation and uses memory optimization tools to handle large datasets smoothly.
 
 ---
-## ⚡ Quick Start
 
-### 📥 Install with pip
+## Quick Start
+
+### Install with pip
 
 ```bash
 pip install frypto
 ```
 
-### ▶️ Running Frypto
-load your CryptoCurrency data (or download data with yfinance as shown below).
+### Running Frypto
+Load your cryptocurrency data (or download data with yfinance as shown below).
+
 ```python
 from frypto import AllFeatures
 import yfinance as yf
@@ -31,12 +44,13 @@ features = allfeatures.compute()  # Returns a pd.DataFrame with the new features
 
 # View the top rows of the generated features
 print(features.head())  # New DataFrame with 41 features
-
 ```
+
+---
 
 ## Usage
 
-Frypto computes a range of financial TS features, **price changes, spreads, rolling statistics, momentum indicators, trend indicators, volatility measures, volume-based features, and lagged features.**
+Frypto computes a range of financial time series features, including **price changes, spreads, rolling statistics, momentum indicators, trend indicators, volatility measures, volume-based features, and lagged features.**
 
 - **Price and Spread Features**: `Price_change`, `next_log_return`, `high_low_spread`, `close_open_spread`
 - **Volatility Features**: `rolling_std`, `upper_band`, `lower_band`, `ATR`
@@ -45,8 +59,7 @@ Frypto computes a range of financial TS features, **price changes, spreads, roll
 - **Volume-Based Features**: `volume_change`, `OBV`
 - **Lagged and Rolling Features**: `lag_1`, `lag_2`, `lag_3`, `rolling_mean`, `rolling_max`, `rolling_min` (for windows 5, 10, and 20)
 - **Trend Indicators**: `+DI`, `-DI`, `ADX`, `support_line`, `resistance_line`, `tenkan_sen`, `kijun_sen`, `senkou_span_a`, `senkou_span_b`, `chikou_span`
-
-``` python
+```python
 import numpy as np
 import pandas as pd
 import yfinance as yf
@@ -114,36 +127,74 @@ all_features_df = pd.concat([
 
 print("All Computed Features:\n", all_features_df.head())
 ```
-<!-- ---
 
-## 🤝 Contributing
+---
+
+## Jupyter Notebooks
+
+Explore the example notebooks to learn more about Frypto:
+
+- [Getting Started with Frypto](notebooks/Getting_Started_with_Frypto.ipynb): Step-by-step guide to setting up and using Frypto.
+- [Exploring Individual Feature Types](notebooks/Exploring_Individual_Features.ipynb): Detailed exploration of each feature type and its applications.
+
+---
+
+## Contributing
 
 ### Clone the repo
 
 ```bash
 git clone https://github.com/NotAbdelrahmanelsayed/frypto
-```
-```bash
 cd frypto
 ```
-### Build the project
+
+### Create the environment
+
+Ensure `virtualenv` is installed:
 
 ```bash
-go build
+pip install virtualenv
 ```
 
-### Run the project
+Then, create and activate a virtual environment:
+
+**Linux**
+```bash
+virtualenv venv
+source venv/bin/activate
+```
+
+**Windows Powershell**
+```bash
+virtualenv venv
+.\venv\Scripts\Activate.ps1
+```
+
+### Install the requirements
 
 ```bash
-./zipzod -i ./input -o ./output.zip
+pip install -r requirements.txt
 ```
 
 ### Run the tests
 
+To run unit tests:
+
 ```bash
-go test ./...
+pytest
+```
+
+To test multiple Python versions (3.7, 3.8, 3.9, 3.10, 3.11, 3.12):
+
+```bash
+tox
 ```
 
 ### Submit a pull request
 
-If you'd like to contribute, please fork the repository and open a pull request to the `main` branch. -->
+If you'd like to contribute, please fork the repository and open a pull request to the `main` branch.
+
+---
+
+## License
+This project is licensed under the MIT License.

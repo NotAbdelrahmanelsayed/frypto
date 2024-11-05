@@ -6,5 +6,5 @@ from .lag_rolling import LagRollingFeatures
 from .statistical_features import StatisticalFeatures
 from .volatility import VolatilityFeatures
 from .trend_features import TrendFeatures
-
-__all__ = [ "PriceFeatures", "VolumeFeatures", "VolatilityFeatures", "MomentumFeatures", "LagRollingFeatures", "StatisticalFeatures", "VolatilityFeatures", "TrendFeatures"]
+from .allfeatures import AllFeatures
+__all__ = [ "PriceFeatures", "VolumeFeatures", "VolatilityFeatures", "MomentumFeatures", "LagRollingFeatures", "StatisticalFeatures", "VolatilityFeatures", "TrendFeatures", "AllFeatures"]

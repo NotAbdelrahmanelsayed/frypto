@@ -166,6 +166,8 @@ cython_debug/
 
 # Ignore examples Notebook
 frypto/examples.ipynb
+tests/test_design.ipynb
+notebooks/Advanced_Usage_and_Customization.ipynb
 
 
 # Ignore My leraning materials.
