@@ -8,4 +8,5 @@ tox
 twine
 webencodings
 yfinance
-.
+-f https://test.pypi.org/simple
+frypto==0.1.0
