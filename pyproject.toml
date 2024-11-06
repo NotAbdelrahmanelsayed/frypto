@@ -2,36 +2,34 @@
 requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
-
 [project]
 name = "frypto"
-version = "0.1.0"
-requires-python = ">= 3.7"
-
-authors = [
-    {name = "Abderlahman Elsayed", email = "bedoelsayed785@gmail.com" }
-]
+version = "0.1.3"
 description = "Crypto data feature engineering package."
-readme = {file = "README.txt", content-type = "text/markdown"}
+readme = {file = "README.md", content-type = "text/markdown"}
+requires-python = ">=3.7"
+authors = [
+    {name = "Abderlahman Elsayed", email = "bedoelsayed785@gmail.com"}
+]
 license = {text = "MIT License"}
 keywords = [
-    "feature engineering", 
-    "cryptocurrency", 
-    "crypto", 
-    "time-series", 
-    "technical indicators", 
-    "data preprocessing", 
-    "financial data", 
-    "machine learning", 
-    "trading", 
-    "blockchain", 
-    "RSI", 
-    "MACD", 
-    "moving average", 
-    "price prediction", 
-    "volatility", 
-    "momentum indicators", 
-    "data analysis", 
+    "feature engineering",
+    "cryptocurrency",
+    "crypto",
+    "time-series",
+    "technical indicators",
+    "data preprocessing",
+    "financial data",
+    "machine learning",
+    "trading",
+    "blockchain",
+    "RSI",
+    "MACD",
+    "moving average",
+    "price prediction",
+    "volatility",
+    "momentum indicators",
+    "data analysis",
     "yfinance"
 ]
 classifiers = [
@@ -48,23 +46,22 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Environment :: Console"
 ]
-
 dependencies = [
     "pandas",
     "numpy",
     "numba",
     "scipy",
-    "yfinance"
+    "yfinance",
 ]
 
 [project.urls]
-Repository = "https://github.com/NotAbdelrahmanelsayed/frypto"
-Issues = "https://github.com/NotAbdelrahmanelsayed/frypto/issues"
+"Repository" = "https://github.com/NotAbdelrahmanelsayed/frypto"
+"Issues" = "https://github.com/NotAbdelrahmanelsayed/frypto/issues"
 
-[tool.mypy]
-ignore_missing_imports = true  
-disallow_untyped_defs = true  
+[tool.setuptools]
+include-package-data = true
 
-[[tool.mypy.overrides]]
-module = "sklearn.metrics"
-ignore_missing_imports = true
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["frypto*"]
+exclude = ["notebooks", "tests", "docs", "examples", "scripts"]

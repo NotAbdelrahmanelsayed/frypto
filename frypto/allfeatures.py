@@ -21,7 +21,11 @@ class AllFeatures:
         """
         if len(df) < 20:
             raise ValueError("Data Frame can't have less than 20 row.")
-        
+
+        # Check if columns are MultiIndex
+        if isinstance(df.columns, pd.MultiIndex):
+            df.columns = df.columns.get_level_values(0)
+
         columns = {col.lower(): col for col in df.columns}
 
         self.close = self.extract_feature(df, columns, 'close')

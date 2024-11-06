@@ -43,9 +43,10 @@ test: ## run tests quickly with the default Python
 test-all: ## run tests on every Python version with tox
 	tox
 
-release: dist ## package and upload a release
-	pip install --upgrade setuptools wheel twine
-	twine upload dist/*
+rebuild: dist ## package and upload a release
+	rm -rf dist/ build/
+	python -m build
+	python -m twine upload --repository testpypi dist/*
 
 dist: clean ## builds source and wheel package
 	python3 setup.py sdist
