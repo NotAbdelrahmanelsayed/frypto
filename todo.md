@@ -3,7 +3,9 @@
 - [ ] Inheret extract_features from allfeatures to the other classes if reasonable.
 - [ ] Continues Integration.
 - [ ] More Performance optimization (profiling tools, multiprocessing)
+
 ---
+
 - [x] requirements file
 - [x] README.md
 - [x] notebooks dir for quickstart examples.
