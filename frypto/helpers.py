@@ -1,8 +1,8 @@
 import numpy as np
 import pandas as pd
-from scipy.signal import argrelextrema
+from scipy.signal import argrelextrema # type: ignore
 from typing import Tuple
-from numba import njit, float32, int64
+from numba import njit, float32, int64 # type: ignore
 from frypto.ewma import _ewma
 
 def _pad_nan(values: np.ndarray, window: int) -> np.ndarray:

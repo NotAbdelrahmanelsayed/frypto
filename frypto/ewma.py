@@ -1,9 +1,6 @@
 """Refrence https://gist.github.com/mattermat/12d739a40521b6377728cf85ae803e03"""
 import numpy as np
-from numba import jit
-from numba import float32
-from numba import int64
-
+from numba import jit, float32, int64# type: ignore
 
 @jit((float32[:], int64), nopython=True, nogil=True)
 def _ewma(arr_in: np.ndarray, window: int) -> np.ndarray:
