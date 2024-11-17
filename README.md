@@ -8,6 +8,7 @@ Frypto is a Python package designed to compute a set of financial time series fe
 - [Why Frypto?](#why-frypto)
 - [Quick Start](#quick-start)
 - [Usage](#usage)
+- [Feature Importance Comparison](#feature-importance-comparison)
 - [Jupyter Notebooks](#jupyter-notebooks)
 - [Contributing](#contributing)
 - [License](#license)
@@ -129,13 +130,23 @@ print("All Computed Features:\n", all_features_df.head())
 ```
 
 ---
+## Feature Importance Comparison
 
+Frypto significantly enhances model performance by generating highly informative features. Below is a comparison of the top 20 feature importances for models trained **with** and **without Frypto** features:
+
+### Model with Frypto Features
+![Feature Importances with Frypto](images/with_features.png)
+
+### Model without Frypto Features
+![Feature Importances without Frypto](images/without_features.png)
+--- 
 ## Jupyter Notebooks
 
 Explore the example notebooks to learn more about Frypto:
 
 - [Getting Started with Frypto](notebooks/Getting_Started_with_Frypto.ipynb): Step-by-step guide to setting up and using Frypto.
 - [Exploring Individual Feature Types](notebooks/Exploring_Individual_Features.ipynb): Detailed exploration of each feature type and its applications.
+**[kaggle kernel](https://www.kaggle.com/code/abdelrahmanmelsayed/crypto-feature-engineering-29m-rows-in-8-minutes)** | **[Crypto Feature Engineering: 29M Rows in 8 Minutes](notebooks/crypto-feature-engineering-29m-rows-in-8-minutes.ipynb)**: Showcase of Frypto's performance and scalability on a massive dataset, demonstrating the generation of 42 features in under 9 minutes.
 
 ---
 
